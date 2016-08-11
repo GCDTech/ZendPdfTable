@@ -12,11 +12,10 @@ use ZendPdf\Exception\UnrecognizedFontException;
 use ZendPdf\Font;
 use ZendPdf\InternalType\NumericObject;
 use ZendPdf\InternalType\StringObject;
-use ZendPdf\Page;
 use ZendPdf\Resource\Font\AbstractFont;
 use ZendPdf\Style;
 
-class CustomPage extends Page
+class Page extends \ZendPdf\Page
 {
     /**
      * Constants for PDF Tables

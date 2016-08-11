@@ -52,7 +52,7 @@ class Table
 
     const SPANNED_COLUMN = "0844a4ba9f7e24f20884bf5f92f5441f";
 
-    public function render(CustomPage $page, $x, $y, $width, &$yCurrent)
+    public function render(Page $page, $x, $y, $width, &$yCurrent)
     {
         $this->y = $y;
 
@@ -250,7 +250,7 @@ class Table
             if ($rowNum < $rowCount && $yCurrent + $maxHeight + $yOffset >= $page->getHeight() - $this->marginBottom) {
                 $this->endPage($page, $x, $width, $y, $yCurrent, $xStart, $xOffset, $colWidths, $verticalLineYs);
 
-                $pages[] = $newPage = new CustomPage($page->getWidth(), $page->getHeight());
+                $pages[] = $newPage = new Page($page->getWidth(), $page->getHeight());
                 $newPage->setMargins($page->getMargins());
                 $page = $newPage;
 
@@ -287,18 +287,18 @@ class Table
                 if ($drawHeader) {
                     switch ($this->headerAlignments[$colNum]) {
                         case "right":
-                            $alignment = CustomPage::ALIGN_RIGHT;
+                            $alignment = Page::ALIGN_RIGHT;
                             break;
                         case "justify":
-                            $alignment = CustomPage::ALIGN_JUSTIFY;
+                            $alignment = Page::ALIGN_JUSTIFY;
                             break;
                         case "center":
                         case "centre":
                         case "middle":
-                            $alignment = CustomPage::ALIGN_CENTER;
+                            $alignment = Page::ALIGN_CENTER;
                             break;
                         default:
-                            $alignment = CustomPage::ALIGN_LEFT;
+                            $alignment = Page::ALIGN_LEFT;
                     }
 
                     $verticalLineYs[$colNum][] = $y;
@@ -310,7 +310,7 @@ class Table
                         $cellWidth,
                         $height,
                         $alignment,
-                        CustomPage::TOP,
+                        Page::TOP,
                         $headerFont,
                         $this->headerFontSize,
                         $this->headerFontColour,
@@ -327,16 +327,16 @@ class Table
 
                     switch ($this->columnAlignments[$colNum]) {
                         case "right":
-                            $alignment = CustomPage::ALIGN_RIGHT;
+                            $alignment = Page::ALIGN_RIGHT;
                             break;
                         case "justify":
-                            $alignment = CustomPage::ALIGN_JUSTIFY;
+                            $alignment = Page::ALIGN_JUSTIFY;
                             break;
                         case "center":
-                            $alignment = CustomPage::ALIGN_CENTER;
+                            $alignment = Page::ALIGN_CENTER;
                             break;
                         default:
-                            $alignment = CustomPage::ALIGN_LEFT;
+                            $alignment = Page::ALIGN_LEFT;
                     }
 
                     $page->drawTextBlockWithStyle(
@@ -346,7 +346,7 @@ class Table
                         $cellWidth,
                         $height,
                         $alignment,
-                        CustomPage::TOP,
+                        Page::TOP,
                         (isset($this->textFonts[$rowNum][$colNum]) ? $this->textFonts[$rowNum][$colNum] : $textFont),
                         (isset($this->textFontSizes[$rowNum][$colNum]) ? $this->textFontSizes[$rowNum][$colNum] : $this->textFontSize),
                         (isset($this->textFontColours[$rowNum][$colNum]) ? $this->textFontColours[$rowNum][$colNum] : $this->textFontColour),
@@ -377,7 +377,7 @@ class Table
             if ($rowNum < $rowCount - 1 && $yCurrent >= $page->getHeight() - $this->marginBottom) {
                 $this->endPage($page, $x, $width, $y, $yCurrent, $xStart, $xOffset, $colWidths, $verticalLineYs);
 
-                $pages[] = $newPage = new CustomPage($page->getWidth(false), $page->getHeight());
+                $pages[] = $newPage = new Page($page->getWidth(false), $page->getHeight());
                 $newPage->setMargins($page->getMargins());
                 $page = $newPage;
 
@@ -397,7 +397,7 @@ class Table
         return $pages;
     }
 
-    private function endPage(CustomPage $page, $left, $width, $top, $bottom, $firstColLeft, $xOffset, $colWidths, $verticalLineYs)
+    private function endPage(Page $page, $left, $width, $top, $bottom, $firstColLeft, $xOffset, $colWidths, $verticalLineYs)
     {
         $numCols = count($colWidths);
 
