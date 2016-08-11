@@ -212,7 +212,13 @@ class Page extends \ZendPdf\Page
 
         $subLines = explode("\n", str_replace("\r", "", self::removeHtmlChars($text, false)));
         foreach ($subLines as $text) {
-            $text = array_filter(explode(" ", $text), "is_empty_string");
+            $text = array_filter(
+                explode(" ", $text),
+                function ($string) {
+                    return $string !== "";
+                }
+            );
+
             foreach ($text as $word) {
                 $word = str_replace("&nbsp;", " ", $word);
                 $wordLength = $this->widthForString($word);
