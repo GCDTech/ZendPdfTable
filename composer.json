@@ -1,0 +1,21 @@
+{
+  "name": "gcdtech/zend-pdf-table",
+  "description": "A table drawing package for Zend framework's PDF module",
+  "minimum-stability": "stable",
+  "license": "Apache-2.0",
+  "authors": [
+    {
+      "name": "Niall Smyth",
+      "email": "nsmyth@gcdtech.com"
+    }
+  ],
+  "autoload": {
+    "psr-0": {
+      "ZendPdfTable\\": "src/"
+    }
+  },
+  "require": {
+    "zendframework/zendpdf": "2.0.2",
+    "php": "^5.6 || ^7.0"
+  }
+}
