@@ -884,4 +884,32 @@ class Page extends \ZendPdf\Page
 
         return $this;
     }
+
+    public function drawBarcode($barcode, $xCoord, $yCoord, $height, $width, $orientation = "portrait")
+    {
+        $black = new GrayScale(0);
+        $this->saveGS()->setFillColor($black);
+
+        if ($orientation == "portrait") {
+            $barWidth = $width / strlen($barcode);
+            $yCoord2 = $yCoord - $height;
+
+            for ($i = 0, $len = strlen($barcode); $i < $len; $i++) {
+                if ($barcode[$i]) {
+                    $this->drawRectangle($i * $barWidth + $xCoord, $yCoord, ($i * $barWidth) + $barWidth + $xCoord, $yCoord2, \ZendPdf\Page::SHAPE_DRAW_FILL);
+                }
+            }
+        } else {
+            $barHeight = $height / strlen($barcode);
+            $xCoord2 = $xCoord + $width;
+
+            for ($i = 0, $len = strlen($barcode); $i < $len; $i++) {
+                if ($barcode[$i]) {
+                    $this->drawRectangle($xCoord, $i * $barHeight + $yCoord, $xCoord2, ($i * $barHeight) + $barHeight + $yCoord, \ZendPdf\Page::SHAPE_DRAW_FILL);
+                }
+            }
+        }
+
+        $this->restoreGS();
+    }
 }
