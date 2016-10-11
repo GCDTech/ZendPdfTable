@@ -183,13 +183,13 @@ class Table
                             $lockedWidthColumns[] = $colNum;
                         }
                         $numUnlockedColumns = $numCols - count($lockedWidthColumns);
-                        $splitDifference = ($minWidths[$colNum] - $colWidths[$colNum]) / $numUnlockedColumns;
                         $colWidths[$colNum] = $minWidths[$colNum];
 
                         if ($numUnlockedColumns < 1) {
                             continue;
                         }
 
+                        $splitDifference = ($minWidths[$colNum] - $colWidths[$colNum]) / $numUnlockedColumns;
                         $changesMade = true;
                         for ($innerColNum = 0; $innerColNum < $numCols; $innerColNum++) {
                             if (!in_array($innerColNum, $lockedWidthColumns)) {
