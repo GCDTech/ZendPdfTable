@@ -18,6 +18,12 @@ use ZendPdf\Style;
 class Page extends \ZendPdf\Page
 {
     /**
+     * Page sizes
+     */
+    const SIZE_A3 = '842:1191:';
+    const SIZE_A3_LANDSCAPE = '1191:842:';
+
+    /**
      * Constants for PDF Tables
      */
     const TOP = 0;
@@ -911,5 +917,111 @@ class Page extends \ZendPdf\Page
         }
 
         $this->restoreGS();
+    }
+
+    /**
+     * @param $text
+     * @param $x
+     * @param $y
+     * @param string $charEncoding
+     * @param null $fontPathOrName
+     * @param null $size
+     * @param null $color
+     * @param null $angle
+     * @param null $lineHeight
+     * @param null $inContentArea
+     * @param bool $rightAlign
+     * @return $this
+     */
+    public function drawTextWithStyle(
+        $text,
+        $x,
+        $y,
+        $charEncoding = '',
+        $fontPathOrName = null,
+        $size = null,
+        $color = null,
+        $angle = null,
+        $lineHeight = null,
+        $inContentArea = null,
+        $rightAlign = false
+    ) {
+        if ($inContentArea === null) {
+            $inContentArea = $this->defaultInContentArea;
+        }
+
+        if ($inContentArea) {
+            $y = $this->getHeight() - $y - $this->getMargin(self::TOP);
+            $x = $x + $this->getMargin(self::LEFT);
+        }
+
+        $this->saveGS();
+
+        if ($lineHeight === null) {
+            $lineHeight = $size;
+        }
+
+        if ($fontPathOrName && $size && $color) {
+            $style = new Style();
+
+            if (is_object($fontPathOrName)) {
+                $font = $fontPathOrName;
+            } else if (file_exists($fontPathOrName)) {
+                $font = Font::fontWithPath($fontPathOrName);
+            } else {
+                $font = Font::fontWithName($fontPathOrName);
+            }
+
+            $style->setFont($font, $size);
+
+            $style->setFillColor(self::parseColor($color));
+
+            $this->setStyle($style);
+        } else if ($fontPathOrName || $size || $color) {
+            throw new BadMethodCallException('If you pass any of the font path, size or color to drawText you must provide all 3');
+        }
+
+        if ($angle) {
+            $radians = deg2rad($angle);
+            $this->rotate($x, $y, $radians);
+        }
+
+        if ($this->_font === null) {
+            if (isset($font)) {
+                $this->_font = $font;
+            } else {
+                throw new BadMethodCallException('Font has not been set');
+            }
+        } else {
+            if (!isset($font)) {
+                $font = $this->_font;
+            }
+        }
+
+        $this->_addProcSet('Text');
+
+        $textLines = explode("\n", str_replace("\r", "", $text));
+
+        foreach ($textLines as $text) {
+            $thisX = $x;
+            if ($rightAlign && $font) {
+                $thisX -= $font->widthForStringUsingFontSize($text, $size);
+            }
+
+            $textObj = new StringObject($this->_font->encodeString($text, $charEncoding));
+            $xObj = new NumericObject($thisX);
+            $yObj = new NumericObject($y);
+
+            $this->_contents .= "BT\n"
+                . $xObj->toString() . ' ' . $yObj->toString() . " Td\n"
+                . $textObj->toString() . " Tj\n"
+                . "ET\n";
+
+            $y -= $lineHeight;
+        }
+
+        $this->restoreGS();
+
+        return $this;
     }
 }
