@@ -212,6 +212,9 @@ class Table
 
         $drawHeader = $this->hasHeader;
         for ($rowNum = 0, $rowCount = count($this->content); $rowNum < $rowCount; $rowNum++) {
+            if ($rowNum == -1) {
+                continue;
+            }
             $row = $this->content[$rowNum];
 
             if ($drawHeader && $rowNum != 0) {
